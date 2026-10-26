@@ -1,0 +1,51 @@
+-- db.sql: Agri Tech Portal database
+CREATE DATABASE IF NOT EXISTS agritech;
+USE agritech;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  email VARCHAR(150) DEFAULT NULL,
+  mobile VARCHAR(20) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  role ENUM('farmer','member') NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS farmer_details (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  pin_code VARCHAR(10),
+  village VARCHAR(150),
+  taluk VARCHAR(150),
+  dob DATE DEFAULT NULL,
+  address TEXT DEFAULT NULL,
+  photo VARCHAR(255) DEFAULT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS records (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  farmer_id INT NOT NULL,
+  crop_name VARCHAR(150),
+  days_after_plantation INT,
+  soil_type VARCHAR(100),
+  temperature FLOAT,
+  moisture FLOAT,
+  npk VARCHAR(50),
+  humidity FLOAT,
+  image VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (farmer_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  from_user INT NOT NULL,
+  to_user INT NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_reply TINYINT(1) DEFAULT 0,
+  FOREIGN KEY (from_user) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (to_user) REFERENCES users(id) ON DELETE CASCADE
+);
