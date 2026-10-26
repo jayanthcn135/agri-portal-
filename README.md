@@ -1,2 +1,2 @@
 # agri-portal-
-Website for farmers 
+Website for farmers and user 
